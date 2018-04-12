@@ -18,7 +18,7 @@ $("#add-train-btn").on("click", function (event) {
     // Grabs information from user input
     var trainName = $("#train-name-input").val().trim();
     var trainDestination = $("#destination-input").val().trim();
-    var trainTime = moment($("#time-input").val().trim(), "HHmm").subtract(1, 'years').format("HHmm");
+    var trainTime = moment($("#time-input").val().trim(), "HH:mm").subtract(1, 'years').format("HH:mm");
     var trainFrequency = $("#frequency-input").val().trim();
 
     // Created for holding train data in a local temporary object
@@ -58,23 +58,23 @@ database.ref().on("child_added", function (childSnapshot, prevChildKey) {
     var trainFrequency = childSnapshot.val().frequency;
 
     // Current time
-    var trainTime = moment();
-    var diffTime = moment().diff(moment(trainTime), "minutes");
+    //var trainTime = moment();
+    //var diffTime = moment().diff(moment.unix(trainTime), "minutes");
 
     // Time remaining
-    var timeRemaining = diffTime % trainFrequency;
+    var timeRemaining = moment().diff(moment.unix(trainTime), "minutes") % trainFrequency;
+    var minutes = trainFrequency - timeRemaining;
+    var nextTrain = moment().add(minutes, "m").format("HH:mm A");
 
-    console.log(timeRemaining);
-
-    // Minutes until next train
-    var minutesTillTrain = trainFrequency - timeRemaining;
-
-    console.log(minutesTillTrain);
-
-    nextTrain = moment().add(minutesTillTrain, "minutes");
-    nextTrainFormat = moment(nextTrain).format('HHmm');
+    console.log(minutes);
+    console.log(nextTrain);
 
     // Adds each train's data into the table
     $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
-        trainFrequency + "</td><td>" + nextTrainFormat + "</td><td>" + minutesTillTrain + "</td></tr>");
+        trainFrequency + "</td><td>" + nextTrain + "</td><td>" + minutes + "</td></tr>");
+
+    // Handles the errors
+}, function (errorObject) {
+    console.log("Errors handled: " + errorObject.code);
+
 });
