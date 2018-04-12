@@ -58,8 +58,8 @@ database.ref().on("child_added", function (childSnapshot, prevChildKey) {
     var trainFrequency = childSnapshot.val().frequency;
 
     // Current time
-    //var trainTime = moment();
-    //var diffTime = moment().diff(moment.unix(trainTime), "minutes");
+    var trainTime = moment();
+    var diffTime = moment().diff(moment.unix(trainTime), "minutes");
 
     // Time remaining
     var timeRemaining = moment().diff(moment.unix(trainTime), "minutes") % trainFrequency;
@@ -69,7 +69,7 @@ database.ref().on("child_added", function (childSnapshot, prevChildKey) {
     console.log(minutes);
     console.log(nextTrain);
 
-    // Adds each train's data into the table
+    // Adds each train's data into the time
     $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
         trainFrequency + "</td><td>" + nextTrain + "</td><td>" + minutes + "</td></tr>");
 
